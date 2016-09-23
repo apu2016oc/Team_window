@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Shot : MonoBehaviour {
 	
 	public GameObject bulletPrefab; //弾のプレハブ
 	public float power = 500.0f; //弾の威力
 	public float speed = 0.1f; //カメラアングルの移動速度
+	public int shotCount;
+	public Text shellLabel;
+	public GameObject GameOver;
 
 	// Use this for initialization
 	void Start () {
 		Cursor.visible = false;
+		shellLabel.text = "残り;" + shotCount;
 	}
 	
 	// Update is called once per frame
@@ -33,10 +38,17 @@ public class Shot : MonoBehaviour {
 
 		//左クリック
 		if (Input.GetMouseButtonDown (0)) {
-			//弾を生成
-			GameObject bullet = Instantiate(bulletPrefab,this.transform.position,transform.rotation) as GameObject;
-			//弾が前方に飛ぶように力を加える
-			bullet.GetComponent<Rigidbody>().AddForce(transform.forward * power);
+			if (shotCount > 0) {
+				//弾を生成
+				GameObject bullet = Instantiate (bulletPrefab, this.transform.position, transform.rotation) as GameObject;
+				//弾が前方に飛ぶように力を加える
+				bullet.GetComponent<Rigidbody> ().AddForce (transform.forward * power);
+				shotCount -= 1;
+				shellLabel.text = "残り;" + shotCount;
+			} else if (shotCount == 0) {
+				GameOver.SendMessage ("Lose");
+
+			}
 		}
 	}
 }
