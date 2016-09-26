@@ -10,6 +10,8 @@ public class Shot : MonoBehaviour {
 	public int shotCount;
 	public Text shellLabel;
 	public GameObject GameOver;
+	public AudioClip shotSE;
+	public AudioClip shotSE1;
 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +22,7 @@ public class Shot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//マウスカーソルの位置を取得
-		Vector3 mousePos = Input.mousePosition;
+		/*Vector3 mousePos = Input.mousePosition;
 
 		//中央の位置に合わせる(マウス座標の開始位置は画面左下なので調整が必要)
 		mousePos.x = mousePos.x - ( Screen.width / 2 );
@@ -35,7 +37,7 @@ public class Shot : MonoBehaviour {
 
 		//動かした変化をカメラのアングルに適用させる
 		transform.eulerAngles = cameraAngle;
-
+        */
 		//左クリック
 		if (Input.GetMouseButtonDown (0)) {
 			if (shotCount > 0) {
@@ -43,12 +45,16 @@ public class Shot : MonoBehaviour {
 				GameObject bullet = Instantiate (bulletPrefab, this.transform.position, transform.rotation) as GameObject;
 				//弾が前方に飛ぶように力を加える
 				bullet.GetComponent<Rigidbody> ().AddForce (transform.forward * power);
+				GetComponent<AudioSource>().PlayOneShot (shotSE);
 				shotCount -= 1;
 				shellLabel.text = "残り;" + shotCount;
 			} else if (shotCount == 0) {
 				GameOver.SendMessage ("Lose");
-
+				GetComponent<AudioSource>().PlayOneShot (shotSE1);
+				}
 			}
+		if (Input.GetKeyDown ("space")) {
+			Application.LoadLevel ("Title");
 		}
 	}
 }
